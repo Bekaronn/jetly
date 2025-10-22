@@ -25,6 +25,7 @@ export default function SearchFlights() {
     departDate,
     returnDate,
     passengers,
+    travelClass,
   }: any) => {
     // adults
     const adultsCount =
@@ -48,6 +49,7 @@ export default function SearchFlights() {
       adults: adultsCount,
       children: childrenCount,
       infants: infantsCount,
+      travelClass,
     });
   };
 

@@ -86,6 +86,7 @@ export interface FlightSearchFormProps {
       children: number
       infants: number
     }
+    travelClass?: string
   }) => void
   req: {
     loading: boolean

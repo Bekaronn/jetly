@@ -10,6 +10,7 @@ import { ru } from "date-fns/locale"
 import LocationSearch from "./LocationSearch"
 import PassengersSelector from "./Passengers"
 import type { FlightSearchFormProps } from "@/types"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export function FlightSearchForm({ onSearch, req }: FlightSearchFormProps) {
   const [from, setFrom] = useState("")
@@ -21,6 +22,7 @@ export function FlightSearchForm({ onSearch, req }: FlightSearchFormProps) {
     children: 0,
     infants: 0,
   })
+  const [travelClass, setTravelClass] = useState<"ECONOMY" | "PREMIUM_ECONOMY" | "BUSINESS" | "FIRST">("ECONOMY");
 
   const handlePassengersChange = (data: {
     adults: number
@@ -41,6 +43,7 @@ export function FlightSearchForm({ onSearch, req }: FlightSearchFormProps) {
       departDate,
       returnDate,
       passengers,
+      travelClass,
     })
   }
 
@@ -57,7 +60,7 @@ export function FlightSearchForm({ onSearch, req }: FlightSearchFormProps) {
         />
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6 mb-8">
+      <div className="grid md:grid-cols-4 gap-6 mb-8">
         <div className="space-y-2">
           <Label className="text-sm font-medium text-foreground">Дата вылета</Label>
           <Popover>
@@ -75,7 +78,6 @@ export function FlightSearchForm({ onSearch, req }: FlightSearchFormProps) {
                 mode="single"
                 selected={departDate}
                 onSelect={setDepartDate}
-                initialFocus
                 locale={ru}
                 className="bg-popover"
               />
@@ -101,7 +103,6 @@ export function FlightSearchForm({ onSearch, req }: FlightSearchFormProps) {
                 mode="single"
                 selected={returnDate}
                 onSelect={setReturnDate}
-                initialFocus
                 locale={ru}
                 disabled={(date) => (departDate ? date < departDate : false)}
                 className="bg-popover"
@@ -111,6 +112,23 @@ export function FlightSearchForm({ onSearch, req }: FlightSearchFormProps) {
         </div>
 
         <PassengersSelector onChange={handlePassengersChange} />
+
+        {/* Класс обслуживания */}
+        <div className="space-y-2">
+          <Label className="text-sm font-medium text-foreground">Класс обслуживания</Label>
+          <Select value={travelClass} onValueChange={(value) => setTravelClass(value as typeof travelClass)}>
+            <SelectTrigger className="w-full font-normal bg-input border-border text-foreground hover:bg-secondary">
+              <SelectValue placeholder="Выберите класс" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="ECONOMY">Эконом</SelectItem>
+              <SelectItem value="PREMIUM_ECONOMY">Премиум эконом</SelectItem>
+              <SelectItem value="BUSINESS">Бизнес</SelectItem>
+              <SelectItem value="FIRST">Первый</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
       </div>
 
       <Button
