@@ -80,7 +80,7 @@ export default function SearchFlights() {
           flights.length > 0 && (
             <div className="space-y-4 animate-fadeIn">
               {flights.map((f) => (
-                <FlightCard key={f.id} offer={f as FlightOffer} />
+                <FlightCard key={f.id} offer={f as FlightOffer} dictionaries={flightsResponse?.dictionaries} />
               ))}
             </div>
           )

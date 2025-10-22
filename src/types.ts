@@ -16,7 +16,7 @@ export interface FlightOfferResponse {
   instantTicketingRequired: boolean;
   nonHomogeneous: boolean;
   lastTicketingDate: string;
-  itineraries?: any[];
+  itineraries?: Itinerary[];
   price?: {
     total: string;
     currency: string;
@@ -32,15 +32,20 @@ export interface FligtsResponse {
 }
 
 
-
-
-interface FlightSegment {
+export interface FlightSegment {
   departure: { iataCode: string; at: string };
   arrival: { iataCode: string; at: string };
   carrierCode: string;
   number: string;
   duration?: string;
   aircraft?: { code?: string };
+
+  departureCity?: string;
+  departureCountry?: string;
+  arrivalCity?: string;
+  arrivalCountry?: string;
+  carrierName?: string;
+  aircraftName?: string;
 }
 
 interface Itinerary {

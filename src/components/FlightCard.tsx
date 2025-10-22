@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { PlaneTakeoff, PlaneLanding, Clock, Users } from "lucide-react";
-import type { FlightCardProps } from "@/types";
+import type { FlightCardProps, FlightSegment } from "@/types";
 import FlightModal from "./FlightModal";
 
-export default function FlightCard({ offer }: FlightCardProps) {
+export default function FlightCard({ offer, dictionaries }: FlightCardProps & { dictionaries?: any }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const itineraries = offer.itineraries || [];
-  const airline = offer.validatingAirlineCodes?.[0] || "—";
+  const airline = offer.validatingAirlineCodes?.[0]
+    ? dictionaries?.carriers?.[offer.validatingAirlineCodes[0]] ?? offer.validatingAirlineCodes[0]
+    : "—";
   const seats = offer.numberOfBookableSeats ?? 0;
   const price = offer.price?.total ?? "—";
   const currency = offer.price?.currency ?? "";
@@ -15,19 +17,21 @@ export default function FlightCard({ offer }: FlightCardProps) {
   const firstItinerary = itineraries[0];
   const secondItinerary = itineraries[1];
 
-  const firstSeg = firstItinerary?.segments?.[0];
-  const lastSeg = firstItinerary?.segments?.[firstItinerary.segments.length - 1];
+  const firstSeg: FlightSegment | undefined = firstItinerary?.segments?.[0];
+  const lastSeg: FlightSegment | undefined = firstItinerary?.segments?.[firstItinerary.segments.length - 1];
 
   const depTime = firstSeg ? new Date(firstSeg.departure.at).toLocaleString() : "—";
   const arrTime = lastSeg ? new Date(lastSeg.arrival.at).toLocaleString() : "—";
   const duration = firstItinerary?.duration?.replace("PT", "").toLowerCase() ?? "—";
 
-  const retFirst = secondItinerary?.segments?.[0];
-  const retLast = secondItinerary?.segments?.[secondItinerary.segments.length - 1];
+  const retFirst: FlightSegment | undefined = secondItinerary?.segments?.[0];
+  const retLast: FlightSegment | undefined = secondItinerary?.segments?.[secondItinerary.segments.length - 1];
   const retDep = retFirst ? new Date(retFirst.departure.at).toLocaleString() : "—";
   const retArr = retLast ? new Date(retLast.arrival.at).toLocaleString() : "—";
-  const retDur =
-    secondItinerary?.duration?.replace("PT", "").toLowerCase() ?? "—";
+  const retDur = secondItinerary?.duration?.replace("PT", "").toLowerCase() ?? "—";
+
+  // Функция для получения города по IATA через dictionaries
+  const getCityName = (iata: string) => dictionaries?.locations?.[iata]?.cityCode ?? iata;
 
   return (
     <div className="relative bg-white rounded-2xl shadow-md overflow-hidden border border-gray-200 mb-6 hover:shadow-xl transition-all">
@@ -43,14 +47,13 @@ export default function FlightCard({ offer }: FlightCardProps) {
           </div>
 
           <div className="flex justify-between w-4/5 mt-5">
-            {/* Туда */}
             <div className="mb-3">
               <div className="flex items-center gap-2 text-blue-600 font-medium mb-1">
                 <PlaneTakeoff size={16} /> Туда
               </div>
               <div className="ml-5 text-gray-700 text-sm">
                 <p>
-                  {firstSeg?.departure.iataCode} → {lastSeg?.arrival.iataCode}
+                  {getCityName(firstSeg?.departure.iataCode ?? "—")} → {getCityName(lastSeg?.arrival.iataCode ?? "—")}
                 </p>
                 <p>Вылет: {depTime}</p>
                 <p>Прилет: {arrTime}</p>
@@ -67,7 +70,7 @@ export default function FlightCard({ offer }: FlightCardProps) {
                 </div>
                 <div className="ml-5 text-gray-700 text-sm">
                   <p>
-                    {retFirst?.departure.iataCode} → {retLast?.arrival.iataCode}
+                    {getCityName(retFirst?.departure.iataCode ?? "—")} → {getCityName(retLast?.arrival.iataCode ?? "—")}
                   </p>
                   <p>Вылет: {retDep}</p>
                   <p>Прилет: {retArr}</p>
@@ -102,11 +105,12 @@ export default function FlightCard({ offer }: FlightCardProps) {
       {isOpen && (
         <FlightModal
           itineraries={itineraries}
-          travelers={offer.travelerPricings} // если есть данные
+          travelers={offer.travelerPricings}
           price={offer.price?.total}
           currency={offer.price?.currency}
           open={isOpen}
           onClose={() => setIsOpen(false)}
+          dictionaries={dictionaries}
         />
       )}
     </div>
