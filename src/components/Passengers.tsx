@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Label } from "@/components/ui/label";
 
-export default function PassengersSelector() {
+interface PassengersSelectorProps {
+  onChange?: (data: { adults: number; children: number; infants: number }) => void;
+}
+
+export default function PassengersSelector({ onChange }: PassengersSelectorProps) {
   const [showPassengers, setShowPassengers] = useState(false);
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(0);
@@ -18,6 +22,10 @@ export default function PassengersSelector() {
       : totalPassengers < 5
       ? "пассажира"
       : "пассажиров";
+
+  useEffect(() => {
+    onChange?.({ adults, children, infants });
+  }, [adults, children, infants]);
 
   const handleDecrease = (
     setter: React.Dispatch<React.SetStateAction<number>>,
@@ -35,19 +43,15 @@ export default function PassengersSelector() {
     setter(Math.min(max, value + 1));
   };
 
-  // 🔹 Обёртки с логикой ограничений
   const handleAdultsChange = (newAdults: number) => {
     const adjustedAdults = Math.max(1, newAdults);
     setAdults(adjustedAdults);
-
-    // если взрослых стало меньше, чем младенцев — уменьшаем младенцев
     if (infants > adjustedAdults) {
       setInfants(adjustedAdults);
     }
   };
 
   const handleInfantsChange = (newInfants: number) => {
-    // младенцев не может быть больше взрослых
     if (newInfants > adults) {
       setInfants(adults);
     } else {
@@ -146,7 +150,7 @@ export default function PassengersSelector() {
                   variant="outline"
                   onClick={() => handleInfantsChange(infants + 1)}
                   className="h-8 w-8 p-0 bg-secondary border-border"
-                  disabled={infants >= adults} // 🔒 не больше взрослых
+                  disabled={infants >= adults}
                 >
                   +
                 </Button>

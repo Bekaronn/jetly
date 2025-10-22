@@ -6,16 +6,11 @@ import { Label } from "@/components/ui/label"
 import { Card } from "@/components/ui/card"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
-import { CalendarIcon, ArrowRight } from "lucide-react"
+import { CalendarIcon, ArrowRight, Loader2 } from "lucide-react"
 import { format } from "date-fns"
 import { ru } from "date-fns/locale"
 import LocationSearch from "./LocationSearch"
 import PassengersSelector from "./Passengers"
-
-interface Location {
-  iataCode: string
-  name?: string
-}
 
 interface FlightSearchFormProps {
   onSearch: (params: {
@@ -29,9 +24,13 @@ interface FlightSearchFormProps {
       infants: number
     }
   }) => void
+  req: {
+    loading: boolean
+    error: boolean
+  }
 }
 
-export function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
+export function FlightSearchForm({ onSearch, req }: FlightSearchFormProps) {
   const [from, setFrom] = useState("")
   const [to, setTo] = useState("")
   const [departDate, setDepartDate] = useState<Date | undefined>()
@@ -55,7 +54,6 @@ export function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
       alert("Выберите города отправления и назначения")
       return
     }
-
     onSearch({
       origin: from,
       destination: to,
@@ -67,7 +65,6 @@ export function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
 
   return (
     <Card className="bg-card border-border p-8">
-      {/* Локации */}
       <div className="grid md:grid-cols-2 gap-6 mb-6">
         <LocationSearch
           label="Откуда"
@@ -79,9 +76,7 @@ export function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
         />
       </div>
 
-      {/* Даты + Пассажиры */}
       <div className="grid md:grid-cols-3 gap-6 mb-8">
-        {/* Дата вылета */}
         <div className="space-y-2">
           <Label className="text-sm font-medium text-foreground">Дата вылета</Label>
           <Popover>
@@ -134,18 +129,24 @@ export function FlightSearchForm({ onSearch }: FlightSearchFormProps) {
           </Popover>
         </div>
 
-        {/* Пассажиры */}
         <PassengersSelector onChange={handlePassengersChange} />
       </div>
 
-      {/* Кнопка поиска */}
       <Button
         onClick={handleSearch}
-        className="w-full bg-primary text-primary-foreground hover:opacity-90 text-base py-6"
+        disabled={req.loading}
+        className="w-full bg-primary text-primary-foreground hover:opacity-90 text-base py-6 flex items-center justify-center gap-2"
         size="lg"
       >
-        Найти билеты
-        <ArrowRight className="ml-2 h-5 w-5" />
+        {req.loading ? (
+          <>
+            <Loader2 className="animate-spin h-5 w-5" /> Идет поиск...
+          </>
+        ) : (
+          <>
+            Найти билеты <ArrowRight className="ml-2 h-5 w-5" />
+          </>
+        )}
       </Button>
     </Card>
   )

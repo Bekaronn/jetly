@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { MapPin, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { getAmadeusToken } from "@/api/amadeus"
+
 
 export interface Location {
   id: string
@@ -52,7 +54,8 @@ export default function LocationSearch({
   const fetchLocations = async (keyword: string) => {
     setLoading(true)
     try {
-      const token = "oWT37HuBWPEpP9R2SCSgpwEk3Ksv" // ⚠️ временный токен
+      const token = await getAmadeusToken();
+
       const response = await axios.get<{ data: Location[] }>(
         "https://test.api.amadeus.com/v1/reference-data/locations",
         {
@@ -89,7 +92,6 @@ export default function LocationSearch({
   return (
     <div className="relative space-y-2 w-full">
       <Label className="text-sm font-medium text-foreground">{label}</Label>
-
       <div className="relative">
         <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
         <Input
@@ -101,11 +103,9 @@ export default function LocationSearch({
             setSelected(null)
           }}
           onFocus={() => query && setShowDropdown(true)}
-          onBlur={() => setTimeout(() => setShowDropdown(false), 150)} // чтобы можно было кликнуть
+          onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
           className="pl-10 bg-input border-border text-foreground placeholder:text-muted-foreground"
         />
-
-        {/* Dropdown */}
         {showDropdown && (
           <ul
             className={cn(
@@ -119,11 +119,9 @@ export default function LocationSearch({
                 Загрузка...
               </li>
             )}
-
             {!loading && results.length === 0 && (
               <li className="px-4 py-3 text-muted-foreground">Ничего не найдено</li>
             )}
-
             {!loading &&
               results.map((item) => (
                 <li
