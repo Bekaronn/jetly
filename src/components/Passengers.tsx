@@ -27,36 +27,22 @@ export default function PassengersSelector({ onChange }: PassengersSelectorProps
     onChange?.({ adults, children, infants });
   }, [adults, children, infants]);
 
-  const handleDecrease = (
-    setter: React.Dispatch<React.SetStateAction<number>>,
-    value: number,
-    min = 0
-  ) => {
-    setter(Math.max(min, value - 1));
+  // Взрослые
+  const handleAdultsChange = (value: number) => {
+    const newAdults = Math.max(1, Math.min(9, value));
+    setAdults(newAdults);
+    if (infants > newAdults) setInfants(newAdults);
   };
 
-  const handleIncrease = (
-    setter: React.Dispatch<React.SetStateAction<number>>,
-    value: number,
-    max = 9
-  ) => {
-    setter(Math.min(max, value + 1));
+  // Дети
+  const handleChildrenChange = (value: number) => {
+    setChildren(Math.max(0, Math.min(9, value)));
   };
 
-  const handleAdultsChange = (newAdults: number) => {
-    const adjustedAdults = Math.max(1, newAdults);
-    setAdults(adjustedAdults);
-    if (infants > adjustedAdults) {
-      setInfants(adjustedAdults);
-    }
-  };
-
-  const handleInfantsChange = (newInfants: number) => {
-    if (newInfants > adults) {
-      setInfants(adults);
-    } else {
-      setInfants(Math.max(0, newInfants));
-    }
+  // Младенцы
+  const handleInfantsChange = (value: number) => {
+    if (value > adults) setInfants(adults);
+    else setInfants(Math.max(0, value));
   };
 
   return (
@@ -78,8 +64,11 @@ export default function PassengersSelector({ onChange }: PassengersSelectorProps
           <div className="space-y-4">
             {/* Взрослые */}
             <div className="flex items-center justify-between">
-              <span className="text-sm text-foreground">Взрослые</span>
-              <div className="flex items-center gap-3">
+              <div>
+                <span className="text-sm font-medium text-foreground">Взрослые</span>
+                <p className="text-xs text-gray-500 mt-0.5">12 лет и старше</p>
+              </div>
+              <div className="flex items-center gap-2">
                 <Button
                   size="sm"
                   variant="outline"
@@ -87,15 +76,14 @@ export default function PassengersSelector({ onChange }: PassengersSelectorProps
                   disabled={adults <= 1}
                   className="h-8 w-8 p-0 bg-secondary border-border"
                 >
-                  -
+                  −
                 </Button>
-                <span className="text-sm font-medium text-foreground w-8 text-center">
-                  {adults}
-                </span>
+                <span className="text-sm font-medium text-foreground w-8 text-center">{adults}</span>
                 <Button
                   size="sm"
                   variant="outline"
                   onClick={() => handleAdultsChange(adults + 1)}
+                  disabled={adults >= 9}
                   className="h-8 w-8 p-0 bg-secondary border-border"
                 >
                   +
@@ -105,23 +93,26 @@ export default function PassengersSelector({ onChange }: PassengersSelectorProps
 
             {/* Дети */}
             <div className="flex items-center justify-between">
-              <span className="text-sm text-foreground">Дети (2–11 лет)</span>
-              <div className="flex items-center gap-3">
+              <div>
+                <span className="text-sm font-medium text-foreground">Дети</span>
+                <p className="text-xs text-gray-500 mt-0.5">от 2 до 11 лет</p>
+              </div>
+              <div className="flex items-center gap-2">
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => handleDecrease(setChildren, children)}
+                  onClick={() => handleChildrenChange(children - 1)}
+                  disabled={children <= 0}
                   className="h-8 w-8 p-0 bg-secondary border-border"
                 >
-                  -
+                  −
                 </Button>
-                <span className="text-sm font-medium text-foreground w-8 text-center">
-                  {children}
-                </span>
+                <span className="text-sm font-medium text-foreground w-8 text-center">{children}</span>
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => handleIncrease(setChildren, children)}
+                  onClick={() => handleChildrenChange(children + 1)}
+                  disabled={children >= 9}
                   className="h-8 w-8 p-0 bg-secondary border-border"
                 >
                   +
@@ -131,26 +122,27 @@ export default function PassengersSelector({ onChange }: PassengersSelectorProps
 
             {/* Младенцы */}
             <div className="flex items-center justify-between">
-              <span className="text-sm text-foreground">Младенцы (до 2 лет)</span>
-              <div className="flex items-center gap-3">
+              <div>
+                <span className="text-sm font-medium text-foreground">Младенцы</span>
+                <p className="text-xs text-gray-500 mt-0.5">Младше 2 лет, без места</p>
+              </div>
+              <div className="flex items-center gap-2">
                 <Button
                   size="sm"
                   variant="outline"
                   onClick={() => handleInfantsChange(infants - 1)}
-                  className="h-8 w-8 p-0 bg-secondary border-border"
                   disabled={infants <= 0}
+                  className="h-8 w-8 p-0 bg-secondary border-border"
                 >
-                  -
+                  −
                 </Button>
-                <span className="text-sm font-medium text-foreground w-8 text-center">
-                  {infants}
-                </span>
+                <span className="text-sm font-medium text-foreground w-8 text-center">{infants}</span>
                 <Button
                   size="sm"
                   variant="outline"
                   onClick={() => handleInfantsChange(infants + 1)}
-                  className="h-8 w-8 p-0 bg-secondary border-border"
                   disabled={infants >= adults}
+                  className="h-8 w-8 p-0 bg-secondary border-border"
                 >
                   +
                 </Button>

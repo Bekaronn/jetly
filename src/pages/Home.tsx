@@ -53,16 +53,27 @@ export default function SearchFlights() {
       <FlightSearchForm onSearch={handleSearch} req={{ loading: isLoading, error: !!error }} />
       </div>
 
-      {error && (
-        <p className="text-red-500 text-center mt-2">
-          Не удалось получить результаты. Попробуйте позже.
-        </p>
-      )}
-
-      <div className="max-w-5xl mx-auto space-y-4">
-      {!isLoading && flights.map((f) => (
-          <FlightCard key={f.id} offer={f as FlightOffer} />
-        ))}
+      <div className="max-w-5xl mx-auto space-y-4 text-center">
+        {/* Ошибка */}
+        {error ? (
+          <div className="bg-red-50 border border-red-200 rounded-2xl p-6 shadow-sm">
+            <p className="text-red-600 text-xl font-semibold mb-1">
+              Не удалось получить результаты
+            </p>
+            <p className="text-gray-600">
+              Попробуйте изменить параметры поиска или повторите позже.
+            </p>
+          </div>
+        ) : (
+          /* Только если нет ошибки — показываем результаты */
+          flights.length > 0 && (
+            <div className="space-y-4 animate-fadeIn">
+              {flights.map((f) => (
+                <FlightCard key={f.id} offer={f as FlightOffer} />
+              ))}
+            </div>
+          )
+        )}
       </div>
     </main>
   )
