@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { FlightSearchForm } from "../components/FlightSearchForm"
 import FlightCard from "../components/FlightCard"
-import { type AmadeusResponse } from "../api/amadeus.ts"
+import { type FligtsResponse } from "../types.ts";
 import { useQuery } from "@/hooks/useQuery.ts";
 import type { FlightOffer } from "../types.ts"; 
 import { searchFlights } from "@/api/Api.ts";
@@ -13,7 +13,7 @@ export default function SearchFlights() {
     data: flightsResponse, 
     isLoading,            
     error,               
-  } = useQuery<AmadeusResponse>(
+  } = useQuery<FligtsResponse>(
     () => searchFlights(params!),
     [params],
     { enabled: !!params }

@@ -1,3 +1,38 @@
+export interface SearchFlightsParams {
+  originLocationCode: string;
+  destinationLocationCode: string;
+  departureDate: string;
+  returnDate?: string;
+  adults: number;
+  children?: number;
+  infants?: number;
+  travelClass?: "ECONOMY" | "PREMIUM_ECONOMY" | "BUSINESS" | "FIRST";
+}
+
+export interface FlightOfferResponse {
+  id: string;
+  type: string;
+  source: string;
+  instantTicketingRequired: boolean;
+  nonHomogeneous: boolean;
+  lastTicketingDate: string;
+  itineraries?: any[];
+  price?: {
+    total: string;
+    currency: string;
+  };
+  travelerPricings?: any[];
+  [key: string]: any; // fallback
+}
+
+export interface FligtsResponse {
+  data: FlightOfferResponse[];
+  meta?: Record<string, any>;
+  dictionaries?: Record<string, any>;
+}
+
+
+
 
 interface FlightSegment {
     departure: { iataCode: string; at: string };
@@ -70,3 +105,4 @@ export interface FlightSearchFormProps {
     placeholder?: string
     onSelect: (location: Location) => void
   }
+  
