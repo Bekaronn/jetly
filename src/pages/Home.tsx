@@ -26,10 +26,19 @@ export default function SearchFlights() {
     returnDate,
     passengers,
   }: any) => {
+    // adults
     const adultsCount =
       typeof passengers === "object"
         ? Number(passengers.adults ?? passengers.value ?? 1)
         : Number(passengers ?? 1);
+
+    // children
+    const childrenCount =
+      typeof passengers === "object" ? Number(passengers.children ?? 0) : 0;
+
+    // infants
+    const infantsCount =
+      typeof passengers === "object" ? Number(passengers.infants ?? 0) : 0;
 
     setParams({
       originLocationCode: origin,
@@ -37,6 +46,8 @@ export default function SearchFlights() {
       departureDate: departDate ? departDate.toISOString().split("T")[0] : '',
       returnDate: returnDate ? returnDate.toISOString().split("T")[0] : undefined,
       adults: adultsCount,
+      children: childrenCount,
+      infants: infantsCount,
     });
   };
 

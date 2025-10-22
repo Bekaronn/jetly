@@ -89,7 +89,6 @@ export default function FlightCard({ offer }: FlightCardProps) {
             <p className="text-3xl font-bold text-gray-900">
               {price} {currency}
             </p>
-            <p className="text-sm text-gray-500 mt-1">за взрослого</p>
           </div>
           <button
             onClick={() => setIsOpen(true)}
