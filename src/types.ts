@@ -23,7 +23,13 @@ interface FlightSegment {
     validatingAirlineCodes?: string[];
     numberOfBookableSeats?: number;
     price?: Price;
+    travelerPricings?: TravelerPricing[];
   }
+
+  export interface TravelerPricing {
+  travelerType: string; // ADULT, CHILD, INFANT
+  price: { total: string; base: string; currency: string };
+}
   
 export interface FlightCardProps {
     offer: FlightOffer;

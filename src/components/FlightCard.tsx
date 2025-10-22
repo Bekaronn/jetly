@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { PlaneTakeoff, PlaneLanding, Clock, Users } from "lucide-react";
 import type { FlightCardProps } from "@/types";
+import FlightModal from "./FlightModal";
 
 export default function FlightCard({ offer }: FlightCardProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,8 +20,7 @@ export default function FlightCard({ offer }: FlightCardProps) {
 
   const depTime = firstSeg ? new Date(firstSeg.departure.at).toLocaleString() : "—";
   const arrTime = lastSeg ? new Date(lastSeg.arrival.at).toLocaleString() : "—";
-  const duration =
-    firstItinerary?.duration?.replace("PT", "").toLowerCase() ?? "—";
+  const duration = firstItinerary?.duration?.replace("PT", "").toLowerCase() ?? "—";
 
   const retFirst = secondItinerary?.segments?.[0];
   const retLast = secondItinerary?.segments?.[secondItinerary.segments.length - 1];
@@ -101,51 +101,14 @@ export default function FlightCard({ offer }: FlightCardProps) {
       </div>
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-            onClick={() => setIsOpen(false)}
-          ></div>
-          <div className="relative bg-white rounded-2xl shadow-xl max-w-3xl w-full max-h-[80vh] overflow-y-auto p-6 animate-fadeIn">
-            <h2 className="text-xl font-bold mb-4">Детали рейса</h2>
-
-            {itineraries.map((itin, idx) => (
-              <div key={idx} className="mb-5">
-                <h3 className="font-semibold mb-2 text-gray-800">
-                  {idx === 0 ? "Туда" : "Обратно"} —{" "}
-                  {itin.duration?.replace("PT", "").toLowerCase() || "—"}
-                </h3>
-                {itin.segments.map((seg, i) => (
-                  <div
-                    key={i}
-                    className="border-b border-gray-200 pb-2 mb-2 last:border-none"
-                  >
-                    <p className="text-sm text-gray-700">
-                      ✈️ <b>{seg.carrierCode}</b> — {seg.departure.iataCode} →{" "}
-                      {seg.arrival.iataCode}
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      Вылет: {new Date(seg.departure.at).toLocaleString()} <br />
-                      Прилет: {new Date(seg.arrival.at).toLocaleString()}
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      Самолёт: {seg.aircraft?.code || "—"} | Рейс № {seg.number}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            ))}
-
-            <div className="mt-4 text-right">
-              <button
-                onClick={() => setIsOpen(false)}
-                className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition"
-              >
-                Закрыть
-              </button>
-            </div>
-          </div>
-        </div>
+        <FlightModal
+          itineraries={itineraries}
+          travelers={offer.travelerPricings} // если есть данные
+          price={offer.price?.total}
+          currency={offer.price?.currency}
+          open={isOpen}
+          onClose={() => setIsOpen(false)}
+        />
       )}
     </div>
   );
