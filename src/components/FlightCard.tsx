@@ -1,35 +1,6 @@
 import { useState } from "react";
 import { PlaneTakeoff, PlaneLanding, Clock, Users } from "lucide-react";
-
-interface FlightSegment {
-  departure: { iataCode: string; at: string };
-  arrival: { iataCode: string; at: string };
-  carrierCode: string;
-  number: string;
-  duration?: string;
-  aircraft?: { code?: string };
-}
-
-interface Itinerary {
-  duration?: string;
-  segments: FlightSegment[];
-}
-
-interface Price {
-  total: string;
-  currency: string;
-}
-
-interface FlightOffer {
-  itineraries: Itinerary[];
-  validatingAirlineCodes?: string[];
-  numberOfBookableSeats?: number;
-  price?: Price;
-}
-
-interface FlightCardProps {
-  offer: FlightOffer;
-}
+import type { FlightCardProps } from "@/types";
 
 export default function FlightCard({ offer }: FlightCardProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -60,7 +31,6 @@ export default function FlightCard({ offer }: FlightCardProps) {
 
   return (
     <div className="relative bg-white rounded-2xl shadow-md overflow-hidden border border-gray-200 mb-6 hover:shadow-xl transition-all">
-      {/* Левая часть */}
       <div className="flex flex-col md:flex-row justify-between">
         <div className="flex-1 p-6">
           <div className="flex items-center justify-between mb-2">
@@ -90,7 +60,6 @@ export default function FlightCard({ offer }: FlightCardProps) {
             </div>
           </div>
 
-          {/* Обратно */}
           {secondItinerary && (
             <div>
               <div className="flex items-center gap-2 text-green-600 font-medium mb-1">
@@ -111,12 +80,10 @@ export default function FlightCard({ offer }: FlightCardProps) {
           </div>
         </div>
 
-        {/* Разделительная линия (псевдо-перфорация) */}
         <div className="hidden md:block w-[1px] bg-gray-200 relative">
           <div className="absolute top-0 bottom-0 w-[1px] bg-[repeating-linear-gradient(white,white_6px,transparent_6px,transparent_12px)]" />
         </div>
 
-        {/* Правая часть */}
         <div className="w-full md:w-64 bg-gray-50 p-6 flex flex-col justify-between items-center text-center border-t md:border-t-0 md:border-l border-gray-200">
           <div>
             <p className="text-3xl font-bold text-gray-900">
@@ -133,7 +100,6 @@ export default function FlightCard({ offer }: FlightCardProps) {
         </div>
       </div>
 
-      {/* Модалка */}
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div

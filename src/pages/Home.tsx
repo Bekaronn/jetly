@@ -1,45 +1,46 @@
 import { useState } from "react"
 import { FlightSearchForm } from "../components/FlightSearchForm"
 import FlightCard from "../components/FlightCard"
-import { searchFlights } from "../api/amadeus.ts"
+import { type AmadeusResponse } from "../api/amadeus.ts"
+import { useQuery } from "@/hooks/useQuery.ts";
+import type { FlightOffer } from "../types.ts"; 
+import { searchFlights } from "@/api/Api.ts";
 
 export default function SearchFlights() {
-  const [flights, setFlights] = useState<any[]>([])
-  const [req, setReq] = useState({
-    loading: false,
-    error: false,
-  })
+  const [params, setParams] = useState<any>(null);
   
-  const handleSearch = async ({
+  const { 
+    data: flightsResponse, 
+    isLoading,            
+    error,               
+  } = useQuery<AmadeusResponse>(
+    () => searchFlights(params!),
+    [params],
+    { enabled: !!params }
+  );
+
+  const handleSearch = ({
     origin,
     destination,
     departDate,
     returnDate,
     passengers,
   }: any) => {
-    try {
-      setReq({ loading: true, error: false })
-  
-      const adultsCount =
-        typeof passengers === "object"
-          ? Number(passengers.adults ?? passengers.value ?? 1)
-          : Number(passengers ?? 1)
-  
-      const data = await searchFlights({
-        originLocationCode: origin,
-        destinationLocationCode: destination,
-        departureDate: departDate ? departDate.toISOString().split("T")[0] : undefined,
-        returnDate: returnDate ? returnDate.toISOString().split("T")[0] : undefined,
-        adults: adultsCount,
-      })
-  
-      setFlights(data?.data || [])
-      setReq({ loading: false, error: false })
-    } catch (error) {
-      console.error("Ошибка при поиске рейсов:", error)
-      setReq({ loading: false, error: true })
-    }
-  }
+    const adultsCount =
+      typeof passengers === "object"
+        ? Number(passengers.adults ?? passengers.value ?? 1)
+        : Number(passengers ?? 1);
+
+    setParams({
+      originLocationCode: origin,
+      destinationLocationCode: destination,
+      departureDate: departDate ? departDate.toISOString().split("T")[0] : '',
+      returnDate: returnDate ? returnDate.toISOString().split("T")[0] : undefined,
+      adults: adultsCount,
+    });
+  };
+
+  const flights = flightsResponse?.data || [];
 
   return (
     <main className="container mx-auto px-4 py-12">
@@ -49,18 +50,18 @@ export default function SearchFlights() {
       </div>
 
       <div className="max-w-5xl mx-auto mb-12">
-        <FlightSearchForm onSearch={handleSearch} req={req} />
+      <FlightSearchForm onSearch={handleSearch} req={{ loading: isLoading, error: !!error }} />
       </div>
 
-      {req.error && (
+      {error && (
         <p className="text-red-500 text-center mt-2">
           Не удалось получить результаты. Попробуйте позже.
         </p>
       )}
 
       <div className="max-w-5xl mx-auto space-y-4">
-        {flights.map((f) => (
-          <FlightCard key={f.id} offer={f} />
+      {!isLoading && flights.map((f) => (
+          <FlightCard key={f.id} offer={f as FlightOffer} />
         ))}
       </div>
     </main>

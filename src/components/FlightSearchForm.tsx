@@ -11,24 +11,7 @@ import { format } from "date-fns"
 import { ru } from "date-fns/locale"
 import LocationSearch from "./LocationSearch"
 import PassengersSelector from "./Passengers"
-
-interface FlightSearchFormProps {
-  onSearch: (params: {
-    origin: string
-    destination: string
-    departDate?: Date
-    returnDate?: Date
-    passengers: {
-      adults: number
-      children: number
-      infants: number
-    }
-  }) => void
-  req: {
-    loading: boolean
-    error: boolean
-  }
-}
+import type { FlightSearchFormProps } from "@/types"
 
 export function FlightSearchForm({ onSearch, req }: FlightSearchFormProps) {
   const [from, setFrom] = useState("")
