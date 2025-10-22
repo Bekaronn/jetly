@@ -48,7 +48,7 @@ export default function Login() {
               />
             </div>
 
-            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
+            <Button type="submit" className="w-full bg-[oklch(0.57_0.18_254.6)] hover:bg-[oklch(0.52_0.18_254.6)] text-white transition-colors">
               Войти
             </Button>
           </form>
