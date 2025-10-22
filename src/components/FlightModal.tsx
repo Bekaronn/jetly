@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import { useState } from "react"
 import {
   Dialog,
@@ -124,7 +125,26 @@ export default function FlightModal({
 
   const handleBookingSubmit = () => {
     if (!validatePassengers()) return
-    console.log("Отправка данных:", passengerData)
+
+    const booking = {
+      id: Date.now().toString(),
+      itineraries,
+      travelers,
+      passengerData,
+      price,
+      currency,
+      createdAt: new Date().toISOString(),
+    }
+
+    // Загружаем предыдущие бронирования из localStorage
+    const saved = JSON.parse(localStorage.getItem("bookings") || "[]")
+    saved.push(booking)
+
+    // Сохраняем обратно
+    localStorage.setItem("bookings", JSON.stringify(saved))
+
+    console.log("Бронирование сохранено:", booking)
+
     setStep("ticket")
   }
 
