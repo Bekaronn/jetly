@@ -13,7 +13,7 @@ function App() {
       <BrowserRouter>
         <div className="min-h-screen bg-background">
           <Navbar />
-          <div className="p-6">
+          <div className="">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
