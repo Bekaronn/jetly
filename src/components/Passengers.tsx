@@ -20,8 +20,8 @@ export default function PassengersSelector({ onChange }: PassengersSelectorProps
     totalPassengers === 1
       ? "пассажир"
       : totalPassengers < 5
-      ? "пассажира"
-      : "пассажиров";
+        ? "пассажира"
+        : "пассажиров";
 
   useEffect(() => {
     onChange?.({ adults, children, infants });

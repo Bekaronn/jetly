@@ -43,40 +43,40 @@ export default function FlightCard({ offer }: FlightCardProps) {
           </div>
 
           <div className="flex justify-between w-4/5 mt-5">
-              {/* Туда */}
-          <div className="mb-3">
-            <div className="flex items-center gap-2 text-blue-600 font-medium mb-1">
-              <PlaneTakeoff size={16} /> Туда
-            </div>
-            <div className="ml-5 text-gray-700 text-sm">
-              <p>
-                {firstSeg?.departure.iataCode} → {lastSeg?.arrival.iataCode}
-              </p>
-              <p>Вылет: {depTime}</p>
-              <p>Прилет: {arrTime}</p>
-              <p className="flex items-center gap-1">
-                <Clock size={14} /> Длительность: {duration}
-              </p>
-            </div>
-          </div>
-
-          {secondItinerary && (
-            <div>
-              <div className="flex items-center gap-2 text-green-600 font-medium mb-1">
-                <PlaneLanding size={16} /> Обратно
+            {/* Туда */}
+            <div className="mb-3">
+              <div className="flex items-center gap-2 text-blue-600 font-medium mb-1">
+                <PlaneTakeoff size={16} /> Туда
               </div>
               <div className="ml-5 text-gray-700 text-sm">
                 <p>
-                  {retFirst?.departure.iataCode} → {retLast?.arrival.iataCode}
+                  {firstSeg?.departure.iataCode} → {lastSeg?.arrival.iataCode}
                 </p>
-                <p>Вылет: {retDep}</p>
-                <p>Прилет: {retArr}</p>
+                <p>Вылет: {depTime}</p>
+                <p>Прилет: {arrTime}</p>
                 <p className="flex items-center gap-1">
-                  <Clock size={14} /> Длительность: {retDur}
+                  <Clock size={14} /> Длительность: {duration}
                 </p>
               </div>
             </div>
-          )}
+
+            {secondItinerary && (
+              <div>
+                <div className="flex items-center gap-2 text-green-600 font-medium mb-1">
+                  <PlaneLanding size={16} /> Обратно
+                </div>
+                <div className="ml-5 text-gray-700 text-sm">
+                  <p>
+                    {retFirst?.departure.iataCode} → {retLast?.arrival.iataCode}
+                  </p>
+                  <p>Вылет: {retDep}</p>
+                  <p>Прилет: {retArr}</p>
+                  <p className="flex items-center gap-1">
+                    <Clock size={14} /> Длительность: {retDur}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

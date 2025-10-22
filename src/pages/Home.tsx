@@ -3,16 +3,16 @@ import { FlightSearchForm } from "../components/FlightSearchForm"
 import FlightCard from "../components/FlightCard"
 import { type FligtsResponse } from "../types.ts";
 import { useQuery } from "@/hooks/useQuery.ts";
-import type { FlightOffer } from "../types.ts"; 
+import type { FlightOffer } from "../types.ts";
 import { searchFlights } from "@/api/Api.ts";
 
 export default function SearchFlights() {
   const [params, setParams] = useState<any>(null);
-  
-  const { 
-    data: flightsResponse, 
-    isLoading,            
-    error,               
+
+  const {
+    data: flightsResponse,
+    isLoading,
+    error,
   } = useQuery<FligtsResponse>(
     () => searchFlights(params!),
     [params],
@@ -61,7 +61,7 @@ export default function SearchFlights() {
       </div>
 
       <div className="max-w-5xl mx-auto mb-12">
-      <FlightSearchForm onSearch={handleSearch} req={{ loading: isLoading, error: !!error }} />
+        <FlightSearchForm onSearch={handleSearch} req={{ loading: isLoading, error: !!error }} />
       </div>
 
       <div className="max-w-5xl mx-auto space-y-4 text-center">

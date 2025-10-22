@@ -4,8 +4,8 @@ import { Label } from "@/components/ui/label";
 import { MapPin, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Location, LocationSearchProps } from "@/types";
-import { useQuery } from "@/hooks/useQuery"; 
-import { useDebounce } from "@/hooks/useDebounce";  
+import { useQuery } from "@/hooks/useQuery";
+import { useDebounce } from "@/hooks/useDebounce";
 import { fetchLocations } from "@/api/Api";
 
 export default function LocationSearch({
@@ -15,19 +15,19 @@ export default function LocationSearch({
 }: LocationSearchProps) {
   const [query, setQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
-  
+
   const debouncedQuery = useDebounce(query, 400);
 
   const { data: results, isLoading } = useQuery<Location[]>(
     () => fetchLocations(debouncedQuery),
-    [debouncedQuery], 
-    { enabled: debouncedQuery.length > 0 } 
+    [debouncedQuery],
+    { enabled: debouncedQuery.length > 0 }
   );
 
   const handleSelect = (item: Location) => {
     setQuery(`${item.name} (${item.iataCode})`);
     onSelect(item);
-    setIsFocused(false); 
+    setIsFocused(false);
   };
 
   const showDropdown = isFocused && query.length > 0;

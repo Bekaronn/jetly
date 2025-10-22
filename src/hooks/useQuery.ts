@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 type QueryFunction<T> = () => Promise<T>;
 
 interface UseQueryOptions {
-  enabled?: boolean; 
+  enabled?: boolean;
 }
 
 interface UseQueryResult<T> {
@@ -16,12 +16,12 @@ interface UseQueryResult<T> {
 export const useQuery = <T>(
   queryFn: QueryFunction<T>,
   deps: any[] = [],
-  options: UseQueryOptions = { enabled: true } 
+  options: UseQueryOptions = { enabled: true }
 ): UseQueryResult<T> => {
   const [data, setData] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(options.enabled ?? true);
   const [error, setError] = useState<Error | null>(null);
-  
+
   const fetchData = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -46,7 +46,7 @@ export const useQuery = <T>(
     } else {
       setIsLoading(false);
     }
-  }, [fetchData, options.enabled]); 
+  }, [fetchData, options.enabled]);
 
   return { data, isLoading, error, refetch: fetchData };
 };
